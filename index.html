@@ -12,6 +12,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Toastify -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js@1.12.0/src/toastify.min.css">
     <style>
         :root {
             --bs-primary: #365cf5;
@@ -104,7 +106,9 @@
                                     <input type="text" class="form-control" id="cep" name="cep"
                                         placeholder="00000-000" inputmode="numeric"
                                         autocomplete="postal-code" maxlength="9" required>
+                                    <button class="btn btn-primary" id="buscarCep">Buscar</button>
                                 </div>
+                                <div class="form-text">Informe o CEP e clique em Buscar</div>
                             </div>
                             <div class="col-md-8 col-lg-5">
                                 <label for="logradouro" class="form-label required">Logradouro</label>
@@ -144,5 +148,6 @@
     </main>
 
     <script src="script.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js@1.12.0/src/toastify.min.js"></script>
 </body>
 </html>
