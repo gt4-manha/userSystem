@@ -2,6 +2,8 @@ const form = document.querySelector('#formCadastro');
 const buscarCep = document.querySelector('#buscarCep');
 const cep = document.querySelector('#cep');
 const estado = document.querySelector('#estado');
+const cidade = document.querySelector("#cidade");
+
 
 function mensagem(texto, tipo = "sucesso") {
     Toastify({
@@ -25,6 +27,7 @@ function adicionarOpcao(select, texto, valor) {
 // carregar os estados disponíveis
 async function carregarEstados() {
     try {
+        cidade.disabled = true;
         const resposta = await fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome");
         if (!resposta.ok) {
             throw new Error("Não foi possível carregar os estados.");
@@ -36,8 +39,31 @@ async function carregarEstados() {
     }
 }
 
+// ouvir mudança do estado para carregar as cidades
+estado.addEventListener("change", async function() {
+    cidade.replaceChildren(new Option("Carregando cidades...", ""));
+    if (!estado.value) {
+        cidade.replaceChildren(new Option("Selecione o estado primeiro", ""));
+        return;
+    }
+    try {
+        const resposta = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estado.value}/municipios`);
+        if (!resposta.ok) {
+            throw new Error("Não foi possível carregar as cidades.");
+        }
+        const cidades = await resposta.json();
+        cidade.replaceChildren(new Option("Selecione a cidade", ""));
+        cidades.forEach(item => adicionarOpcao(cidade, item.nome, item.nome));
+        if (cidade.dataset.localidade) {
+            cidade.value = cidade.dataset.localidade;
+            delete cidade.dataset.localidade;
+        }
+        cidade.disabled = false;
+    } catch (erro) {}
+});
+
 // ouvir evento de click do buscaCep
-buscarCep.addEventListener("click", async function () {
+buscarCep.addEventListener("click", async function() {
     // expressão regex 
     const valor = cep.value.replace(/\D/g, "");
     if (valor.length !== 8) {
